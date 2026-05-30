@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DODEP - Возрождение</title>
+    <!-- Подключаем скрипт Телеграма для работы Mini App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #ffffff;
+            --accent-color: #238636;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Стиль круглой аватарки */
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            margin-bottom: 15px;
+            object-fit: cover; /* Чтобы не растягивалась */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 10px 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Карточка баланса */
+        .balance-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin: 20px 0;
+            transition: transform 0.1s ease;
+        }
+
+        .amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(35, 134, 54, 0.3);
+        }
+
+        .currency {
+            font-size: 0.9rem;
+            color: #8b949e;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Кнопка Додепа */
+        .btn-dodep {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px 0 rgba(35, 134, 54, 0.39);
+        }
+
+        .btn-dodep:active {
+            transform: scale(0.96);
+            background-color: #2ea043;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.75rem;
+            color: #484f58;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Если аватарка лежит в другой папке, просто замени путь в src -->
+        <img src="avatar.png" alt="DODEP" class="profile-img">
+        
+        <h1>DODEP . NET</h1>
+        <p style="color: #8b949e; margin-top: -10px;">Воскрешение легенды</p>
+        
+        <div class="balance-card" id="card">
+            <div class="amount" id="balanceDisplay">0</div>
+            <div class="currency">Виртуальный баланс</div>
+        </div>
+
+        <button class="btn-dodep" onclick="clickDodep()">ДОДЕПНУТЬ!</button>
+
+        <a href="https://backfun.fun" class="footer">backfun.fun &copy; 2026</a>
+    </div>
+
+    <script>
+        // Инициализация Telegram
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем приложение
+
+        // Загружаем баланс
+        let balance = parseInt(localStorage.getItem('dodep_balance')) || 0;
+        const display = document.getElementById('balanceDisplay');
+        const card = document.getElementById('card');
+        
+        display.innerText = balance.toLocaleString();
+
+        function clickDodep() {
+            // Рандомный выигрыш
+            const win = Math.floor(Math.random() * 500) + 50;
+            balance += win;
+            
+            // Сохраняем
+            localStorage.setItem('dodep_balance', balance);
+            
+            // Красивое обновление текста
+            display.innerText = balance.toLocaleString();
+
+            // Эффект тряски карточки при клике
+            card.style.transform = 'scale(1.05)';
+            setTimeout(() => card.style.transform = 'scale(1)', 100);
+
+            // Вибрация (работает только в мобильном Telegram)
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+        }
+    </script>
+</body>
+</html>
+
